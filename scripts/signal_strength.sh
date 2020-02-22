@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # A script for getting
 # Intended to be called by python program in /vagrant/base_station/radio_update
@@ -7,10 +7,6 @@
     # jarvis exec base_station_radio_update
 
 # Command line arguments
-
-USER=$1
-PASSWORD=$2
-RADIO=$3
 
 # Constants
 
@@ -22,19 +18,19 @@ TMPDIR="/tmp"
 DATA_FILE="tmp_radio_data.json"
 
 # Error if invalid argument count
-if [ $# != 3 && $# != 4 ]
-then
-    echo "USAGE: ./signal_strength.tcl \[username\] \[password\] \[station radio ip\] (optional: temp-file directory)"
+if [ $# != 2 && $# != 3 ]; then
+    echo "USAGE: ./signal_strength.sh \[username\] \[station radio ip\] (optional: temp-file directory)"
     exit 1
 fi
 
+USER=$1
+RADIO=$2
+
 # If temp-file directory argument is specified
-if [ $# == 4 ]
-then
+if [ $# == 3 ]; then
     # If specified path is actually a directory, set TMPDIR to the path
-    if [ ! -d $4 ]
-    then
-        TMPDIR=$4
+    if [ ! -d $3 ]; then
+        TMPDIR=$3
     # If specified path isn't actually a directory, error and quit
     else
         echo "Specified temp-file directory is not a directory"

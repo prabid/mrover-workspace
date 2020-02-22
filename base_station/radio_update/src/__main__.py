@@ -1,4 +1,4 @@
-# Designed to make calls to /vagrant/scripts/signal_strength.tcl
+# Designed to make calls to /vagrant/scripts/signal_strength.sh
 
 import asyncio
 from rover_common import aiolcm
@@ -42,7 +42,7 @@ def extractSignalStrength(message):
 
 
 def run_radio_setup_callback(channel, msg):
-    """ Run radio_setup.tcl """
+    """ Run radio_setup.sh """
 
     args = "{} {} {} {} {} {} {}".format(RADIO_USERNAME,
                                          RADIO_PWD,
@@ -52,12 +52,12 @@ def run_radio_setup_callback(channel, msg):
                                          -4,
                                          "station"
                                          )
-    cmd = os.path.join(SCRIPTS_DIR, "radio_setup.tcl " + args)
+    cmd = os.path.join(SCRIPTS_DIR, "radio_setup.sh " + args)
     os.system(cmd)
 
 
 async def send_sig_strength_loop():
-    """ Periodically call signal_strength.tcl & extract signal strength """
+    """ Periodically call signal_strength.sh & extract signal strength """
 
     while(True):
 
@@ -67,7 +67,7 @@ async def send_sig_strength_loop():
         print("Connecting to radio...")
 
         # Run expect script with arguments [radio username] [password] [ip]
-        cmd = "signal_strength.tcl {} {} {}".format(RADIO_USERNAME,
+        cmd = "signal_strength.sh {} {} {}".format(RADIO_USERNAME,
                                                     RADIO_PWD,
                                                     RADIO_IP)
         stream = os.popen(os.path.join(SCRIPTS_DIR, cmd))
