@@ -20,49 +20,53 @@ USER=$1
 RADIO=$2
 
 CHANBWDEC="radio.1.chanbw="
-CHANBW=$CHANBWDEC+$3
+CHANBW=$CHANBWDEC$3
 
 CHANNELSDEC="radio.1.freq="
-CHANNELS=$CHANNELSDEC+$4
+CHANNELS=$CHANNELSDEC$4
 
-TXPOWERDEC="radio.1.txpower"
-TXPOWER=$TXPOWERDEC+$5
+TXPOWERDEC="radio.1.txpower="
+TXPOWER=$TXPOWERDEC$5
 
 MODEDEC="radio.1.mode="
-MODEVALUE=$6
 
-#TODO if modevalue is managed or master, leave it and don't cause errors
+MODETYPE=""
 
-if [ $MODEVALUE == "station" ]; then
-    MODEVALUE="managed"
+#TODO if modetype is managed or master, leave it and don't cause errors
+
+if [ $6 == "station" ]; then
+    MODETYPE="managed"
     LOCKRADIO=$7
-elif [ $MODEVALUE == "accesspoint" ]; then
-    MODEVALUE="master"
+elif [ $6 == "accesspoint" ]; then
+    MODETYPE="master"
+else
+    echo "Wireless modes available are managed and master"
 fi
 
-MODE=$MODEDEC+$MODEVALUE
+MODE=$MODEDEC$MODETYPE
 
-ssh $USER@$RADIO
+# https://unix.stackexchange.com/questions/31071/shell-script-for-logging-into-a-ssh-server
+# ssh $USER@$RADIO
 
-sed -i -e "s/$CHANBWDEC[0-9]*/[$CHANBW]/g" /tmp/system.cfg
-sed -i -e "s/$CHANNELSDEC[0-9]*/[$CHANNELS]/g" /tmp/system.cfg
-sed -i -e "s/$TXPOWERDEC-*[0-9]*/[$TXPOWER]/g" /tmp/system.cfg
+sed -i -e "s/$CHANBWDEC[0-9]*/$CHANBW/g" /tmp/system.cfg
+sed -i -e "s/$CHANNELSDEC[0-9]*/$CHANNELS/g" /tmp/system.cfg
+sed -i -e "s/$TXPOWERDEC-*[0-9]*/$TXPOWER/g" /tmp/system.cfg
 sed -i -e "s/$MODEDEC.*/[$MODE]/g" /tmp/system.cfg
 
-if [ $MODEVALUE == "managed" ]; then
+if [ $MODETYPE == "managed" ]; then
     MACADDRESS="wireless.1.ap="
 
-    if [ $LOCKRADIO == "10.9.0.1" ]; then
+    if [[ $LOCKRADIO == "10.9.0.1" ]]; then
         MACADDRESS+="68:72:51:80:26:A2"
-    elif [ $LOCKRADIO == "10.9.0.2" ]; then
+    elif [[ $LOCKRADIO == "10.9.0.2" ]]; then
         MACADDRESS+="68:72:51:80:27:45"
-    elif [ $LOCKRADIO == "10.9.0.3" ]; then
+    elif [[ $LOCKRADIO == "10.9.0.3" ]]; then
         MACADDRESS+="68:72:51:8A:29:27"
-    elif [ $LOCKRADIO == "10.9.0.5" ]; then
+    elif [[ $LOCKRADIO == "10.9.0.5" ]]; then
         MACADDRESS+="68:72:51:8A:29:E8"
     fi
 
-    sed -i -e "s/wireless.1.ap=.*/[$MACADDRESS]/g" /tmp/system.cfg
+    sed -i -e "s/wireless.1.ap=.*/$MACADDRESS/g" /tmp/system.cfg
 fi
 
 save && reboot

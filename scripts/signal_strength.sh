@@ -11,7 +11,7 @@
 # Constants
 
 # Radio connection timeout
-timeout=20
+# timeout=20
 # Directory for storing files
 TMPDIR="/tmp"
 # Name of temp data file
