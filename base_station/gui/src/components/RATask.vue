@@ -32,6 +32,9 @@
     <div class="box map light-bg">
       <RoverMap v-bind:odom="odom"/>
     </div>
+    <div class="box radio light-bg">
+      <RadioSignalStrength />
+    </div>
     <div class="box waypoints light-bg">
       <WaypointEditor v-bind:odom="odom" />
     </div>
@@ -53,6 +56,7 @@ import ArmControls from './ArmControls.vue'
 import DriveControls from './DriveControls.vue'
 import EncoderCounts from './EncoderCounts.vue'
 import WaypointEditor from './WaypointEditor.vue'
+import RadioSignalStrength from './RadioSignalStrength.vue'
 import LCMBridge from 'lcm_bridge_client/dist/bridge.js'
 
 let interval;
@@ -150,7 +154,8 @@ export default {
         {'topic': '/camera_servos', 'type': 'CameraServos'},
         {'topic': '/encoder', 'type': 'Encoder'},
         {'topic': '/nav_status', 'type': 'NavStatus'},
-        {'topic': '/debugMessage', 'type': 'DebugMessage'}
+        {'topic': '/debugMessage', 'type': 'DebugMessage'},
+        {'topic': '/radio_update', 'type': 'RadioMessage'}
       ]
     )
 
@@ -203,7 +208,8 @@ export default {
     DriveControls,
     EncoderCounts,
     OdometryReading,
-    WaypointEditor
+    WaypointEditor,
+    RadioSignalStrength
   }
 }
 </script>
@@ -215,7 +221,7 @@ export default {
     grid-gap: 10px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 60px 3fr 1fr 2fr 70px 60px;
-    grid-template-areas: "header header" "map cameras" "map waypoints" "map waypoints" "controls waypoints" "odom waypoints";
+    grid-template-areas: "header header" "map cameras" "map waypoints" "radio waypoints" "controls waypoints" "odom waypoints";
     font-family: sans-serif;
     height: 98vh;
   }

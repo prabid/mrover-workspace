@@ -43,7 +43,7 @@ export default {
     this.$parent.subscribe('/radio_update', (msg) => {
       console.log("Radio update receieved")
 
-      this.signal_strength = msg.signal_strength
+      this.signal_strength = msg.signal_strength + " dBm"
     })
   }
 }
